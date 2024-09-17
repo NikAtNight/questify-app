@@ -1,43 +1,37 @@
 import { Session, User } from "@supabase/supabase-js";
 import { usePostUser } from "actions/userHooks";
 import { useRouter, useSegments, SplashScreen } from "expo-router";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { create } from "zustand";
 
 import { supabase } from "@/config/supabase";
 
 SplashScreen.preventAutoHideAsync();
 
-type SupabaseContextProps = {
+type SupabaseStore = {
 	user: User | null;
 	session: Session | null;
-	initialized?: boolean;
-	signUp: (email: string, password: string) => Promise<void>;
-	signInWithPassword: (email: string, password: string) => Promise<void>;
-	signOut: () => Promise<void>;
+	initialized: boolean;
+	setUser: (user: User | null) => void;
+	setSession: (session: Session | null) => void;
+	setInitialized: (initialized: boolean) => void;
 };
 
 type SupabaseProviderProps = {
 	children: React.ReactNode;
 };
 
-export const SupabaseContext = createContext<SupabaseContextProps>({
+const useSupabaseStore = create<SupabaseStore>((set) => ({
 	user: null,
 	session: null,
 	initialized: false,
-	signUp: async () => {},
-	signInWithPassword: async () => {},
-	signOut: async () => {},
-});
+	setUser: (user) => set({ user }),
+	setSession: (session) => set({ session }),
+	setInitialized: (initialized) => set({ initialized }),
+}));
 
-export const useSupabase = () => useContext(SupabaseContext);
-
-export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
-	const router = useRouter();
-	const segments = useSegments();
-	const [user, setUser] = useState<User | null>(null);
-	const [session, setSession] = useState<Session | null>(null);
-	const [initialized, setInitialized] = useState<boolean>(false);
-
+export const useSupabase = () => {
+	const { user, session, initialized } = useSupabaseStore();
 	const { mutateAsync, isError, error: err } = usePostUser();
 
 	const signUp = async (email: string, password: string) => {
@@ -73,6 +67,21 @@ export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
 		}
 	};
 
+	return {
+		user,
+		session,
+		initialized,
+		signUp,
+		signInWithPassword,
+		signOut,
+	};
+};
+
+export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
+	const router = useRouter();
+	const segments = useSegments();
+	const { setUser, setSession, setInitialized, initialized, session } = useSupabaseStore();
+
 	useEffect(() => {
 		const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
 			setSession(session);
@@ -95,28 +104,11 @@ export const SupabaseProvider = ({ children }: SupabaseProviderProps) => {
 			router.replace("/(public)/welcome");
 		}
 
-		/* HACK: Something must be rendered when determining the initial auth state... 
-		instead of creating a loading screen, we use the SplashScreen and hide it after
-		a small delay (500 ms)
-		*/
-
+		// HACK: Use SplashScreen and hide it after a small delay (500 ms)
 		setTimeout(() => {
 			SplashScreen.hideAsync();
 		}, 500);
 	}, [initialized, session]);
 
-	return (
-		<SupabaseContext.Provider
-			value={{
-				user,
-				session,
-				initialized,
-				signUp,
-				signInWithPassword,
-				signOut,
-			}}
-		>
-			{children}
-		</SupabaseContext.Provider>
-	);
+	return <>{children}</>;
 };
