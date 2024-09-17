@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { House, ArrowLeftRight, User, ChartPie } from "lucide-react-native";
+import { House, User } from "lucide-react-native";
 import React from "react";
 
 import { theme } from "@/lib/constants";
@@ -17,17 +17,13 @@ export default function ProtectedLayout() {
 				},
 				tabBarShowLabel: false,
 				tabBarIcon: ({ color }) => {
-					if (route.name === "home") return <House />;
-					if (route.name === "transactions") return <ArrowLeftRight />;
-					if (route.name === "budgets") return <ChartPie />;
-					if (route.name === "settings") return <User />;
+					if (route.name === "home") return <House color={color} />;
+					if (route.name === "profile") return <User color={color} />;
 				},
 			})}
 		>
 			<Tabs.Screen name="home" />
-			<Tabs.Screen name="transactions" />
-			<Tabs.Screen name="budgets" />
-			<Tabs.Screen name="settings" />
+			<Tabs.Screen name="profile" />
 		</Tabs>
 	);
 }
