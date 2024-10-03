@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Search, Bell, BellOff } from "lucide-react-native";
+import { Search, Bell, BellOff, Dot, Plus } from "lucide-react-native";
 import { View, TouchableOpacity } from "react-native";
 
 import { SafeAreaView } from "@/components/safe-area-view";
@@ -20,7 +20,16 @@ export default function Home() {
 
 	return (
 		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
-			<H2>Active Quests</H2>
+			<View className="flex flex-row items-center justify-between w-full">
+				{/* Invisible button to evenly space the header */}
+				<Button className="invisible" variant="ghost" size="none">
+					<Dot />
+				</Button>
+				<H2>Active Quests</H2>
+				<Button onPress={() => router.back()} variant="ghost" size="none">
+					<Plus />
+				</Button>
+			</View>
 			<Input placeholder="Search" className="w-full" icon={<Search />} />
 			{myHabits.map((item) => {
 				const habit: Habit = habitData.find((habit) => habit.id === item.habit) as Habit;

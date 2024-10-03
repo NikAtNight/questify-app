@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Swords, Shield, User } from "lucide-react-native";
+import { Swords, Shield, Crown } from "lucide-react-native";
 import React from "react";
 
 import { theme } from "@/lib/constants";
@@ -22,7 +22,7 @@ export default function ProtectedLayout() {
 				tabBarIcon: ({ color }) => {
 					if (route.name === "home") return <Shield color={color} />;
 					if (route.name === "create-habit") return <Swords color={color} />;
-					if (route.name === "profile") return <User color={color} />;
+					if (route.name === "profile") return <Crown color={color} />;
 				},
 			})}
 		>

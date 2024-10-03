@@ -1,10 +1,10 @@
 import { useRouter } from "expo-router";
-import { Search, ChevronLeft, Dot } from "lucide-react-native";
+import { Search, Plus, Dot } from "lucide-react-native";
 import { View, TouchableOpacity } from "react-native";
 
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { H2, Muted } from "@/components/ui/typography";
@@ -19,13 +19,13 @@ export default function Habits() {
 	return (
 		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
 			<View className="flex flex-row items-center justify-between w-full">
-				<Button onPress={() => router.back()} variant="ghost" size="none">
-					<ChevronLeft />
-				</Button>
-				<H2>Search for Quests</H2>
 				{/* Invisible button to evenly space the header */}
 				<Button className="invisible" variant="ghost" size="none">
 					<Dot />
+				</Button>
+				<H2>Search for Quests</H2>
+				<Button onPress={() => router.back()} variant="ghost" size="none">
+					<Plus />
 				</Button>
 			</View>
 
@@ -34,7 +34,7 @@ export default function Habits() {
 			<View className="flex-1 w-full gap-y-4">
 				{habits.map((habit) => {
 					return (
-						<Card className="w-full">
+						<Card className="w-full" key={habit.id}>
 							<CardHeader>
 								<View className="flex flex-row justify-between">
 									<CardTitle>{habit.name}</CardTitle>
