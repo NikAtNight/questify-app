@@ -1,0 +1,38 @@
+[
+    {
+        "id": "1d4f5a70-0d32-4b8d-83d4-bc3b83b77e2d",
+        "name": "Exercise Regularly",
+        "category": "Health",
+        "difficulty_level": "Medium",
+        "milestones": [
+            { "day": 7, "title": "Beginner Athlete", "points": 50 },
+            { "day": 30, "title": "Fitness Enthusiast", "points": 100 },
+            { "day": 60, "title": "Fitness Master", "points": 200 }
+        ],
+        "skills": [
+            { "day": 7, "skill": "Basic workout routines" },
+            { "day": 30, "skill": "Advanced exercises" },
+            { "day": 60, "skill": "Custom workout plan" }
+        ],
+        "created_at": "2024-09-15T10:00:00Z",
+        "updated_at": "2024-09-25T10:00:00Z"
+    },
+    {
+        "id": "f5d7b082-7609-4d36-94a9-cd9c3838b7ea",
+        "name": "Read Daily",
+        "category": "Learning",
+        "difficulty_level": "Easy",
+        "milestones": [
+            { "day": 7, "title": "Bookworm", "points": 25 },
+            { "day": 30, "title": "Avid Reader", "points": 75 },
+            { "day": 90, "title": "Literary Master", "points": 150 }
+        ],
+        "skills": [
+            { "day": 7, "skill": "Speed reading techniques" },
+            { "day": 30, "skill": "Book summaries" },
+            { "day": 90, "skill": "Deep comprehension skills" }
+        ],
+        "created_at": "2024-09-18T12:30:00Z",
+        "updated_at": "2024-09-29T12:30:00Z"
+    }
+]

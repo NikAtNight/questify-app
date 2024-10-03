@@ -15,6 +15,7 @@ export default function ProtectedLayout() {
 	return (
 		<Stack
 			screenOptions={({ route }) => ({
+				headerShown: false,
 				headerStyle: {
 					backgroundColor: colors.background,
 				},
@@ -24,18 +25,9 @@ export default function ProtectedLayout() {
 				headerTitle: "",
 			})}
 		>
+			<Stack.Screen name="main" />
 			<Stack.Screen
-				name="main"
-				options={{
-					headerRight: () => (
-						<TouchableOpacity onPress={() => push("/(protected)/profile/settings")}>
-							<Settings color={colors.primary} />
-						</TouchableOpacity>
-					),
-				}}
-			/>
-			<Stack.Screen
-				name="settings"
+				name="create"
 				options={{
 					headerTitle: "Settings",
 					headerBackTitleVisible: false,

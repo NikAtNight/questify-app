@@ -14,31 +14,8 @@ export default function WelcomeScreen() {
 	return (
 		<SafeAreaView className="flex flex-1 bg-background p-4">
 			<View className="flex flex-1 items-center justify-center gap-y-4">
-				<H1 className="text-center">Welcome to Expo Supabase Starter</H1>
-				<Muted className="text-center">
-					A comprehensive starter project for developing Expo applications with Supabase as the backend.
-				</Muted>
-				<Button
-					onPress={() => {
-						axios
-							.get("/users/me/")
-							.then(({ data }) => console.log("RESPONSE", data))
-							.catch((err) => console.log(err));
-					}}
-				>
-					<Text>Auth Request</Text>
-				</Button>
-
-				<Button
-					onPress={() => {
-						axios
-							.get("/users/test/")
-							.then(({ data }) => console.log("RESPONSE", data))
-							.catch((err) => console.log(err));
-					}}
-				>
-					<Text>No Auth Request</Text>
-				</Button>
+				<H1 className="text-center">Questify</H1>
+				<Muted className="text-center">Turn your everyday habits into a gamified quest.</Muted>
 			</View>
 			<View className="flex flex-row gap-x-4">
 				<Button

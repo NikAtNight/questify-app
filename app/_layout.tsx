@@ -5,6 +5,7 @@ import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { PortalHost } from "@/components/primitives/portal";
 import { SupabaseProvider } from "@/context/supabase-provider";
 
 export {
@@ -33,6 +34,7 @@ export default function RootLayout() {
 							}}
 						/>
 					</Stack>
+					<PortalHost />
 				</SafeAreaProvider>
 			</SupabaseProvider>
 		</QueryClientProvider>

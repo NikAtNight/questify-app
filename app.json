@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "alfi",
-    "slug": "alfi",
-    "scheme": "alfi-app",
+    "name": "habbitGame",
+    "slug": "habbitGame",
+    "scheme": "habbit-game-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,14 +20,14 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.nikatnight.alfi"
+      "bundleIdentifier": "com.nikatnight.habbitGame"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nikatnight.alfi"
+      "package": "com.nikatnight.habbitGame"
     },
     "experiments": {
       "typedRoutes": true

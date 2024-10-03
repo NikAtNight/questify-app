@@ -1,0 +1,48 @@
+[
+    {
+        "id": "c89e04ac-424d-4a2f-9b7f-6b0e2b2ff85f",
+        "user": "2b8d4e8b-13c4-4292-bd4f-cae58d5f6f0e",
+        "habit": "1d4f5a70-0d32-4b8d-83d4-bc3b83b77e2d",
+        "start_date": "2024-09-20T10:00:00Z",
+        "current_streak": 10,
+        "best_streak": 15,
+        "status": "In Progress",
+        "total_days_completed": 25,
+        "next_milestone": 30,
+        "next_skill_unlock": "Advanced exercises",
+        "progress_percentage": 50.0,
+        "notifications_enabled": true,
+        "habit_logs": [
+            { "date": "2024-09-21", "status": "Completed" },
+            { "date": "2024-09-22", "status": "Completed" },
+            { "date": "2024-09-23", "status": "Skipped" },
+            { "date": "2024-09-24", "status": "Completed" }
+        ],
+        "completion_date": null,
+        "created_at": "2024-09-20T10:00:00Z",
+        "updated_at": "2024-09-25T10:00:00Z"
+    },
+    {
+        "id": "d07f769a-e69d-4859-b8fc-15fa03a19d7e",
+        "user": "3c7a118e-8d2d-4d2a-bd9e-98e2857cf75b",
+        "habit": "f5d7b082-7609-4d36-94a9-cd9c3838b7ea",
+        "start_date": "2024-09-18T12:30:00Z",
+        "current_streak": 5,
+        "best_streak": 7,
+        "status": "In Progress",
+        "total_days_completed": 15,
+        "next_milestone": 30,
+        "next_skill_unlock": "Book summaries",
+        "progress_percentage": 16.7,
+        "notifications_enabled": true,
+        "habit_logs": [
+            { "date": "2024-09-18", "status": "Completed" },
+            { "date": "2024-09-19", "status": "Completed" },
+            { "date": "2024-09-20", "status": "Skipped" },
+            { "date": "2024-09-21", "status": "Completed" }
+        ],
+        "completion_date": null,
+        "created_at": "2024-09-18T12:30:00Z",
+        "updated_at": "2024-09-24T12:30:00Z"
+    }
+]

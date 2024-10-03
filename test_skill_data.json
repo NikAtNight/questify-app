@@ -1,0 +1,20 @@
+[
+	{
+		"id": "cdd1bfb1-7597-4d71-87a6-479fa9a4a1b5",
+		"skill_name": "Basic workout routines",
+		"description": "Introduction to bodyweight exercises and beginner fitness plans.",
+		"category": "Health",
+		"reward_points": 50,
+		"created_at": "2024-09-20T08:00:00Z",
+		"updated_at": "2024-09-21T08:00:00Z"
+	},
+	{
+		"id": "1b63bff0-fbcc-4dd8-9f91-f92bd2bfcfb7",
+		"skill_name": "Speed reading techniques",
+		"description": "Learn how to read faster while maintaining comprehension.",
+		"category": "Learning",
+		"reward_points": 25,
+		"created_at": "2024-09-19T14:30:00Z",
+		"updated_at": "2024-09-22T14:30:00Z"
+	}
+]

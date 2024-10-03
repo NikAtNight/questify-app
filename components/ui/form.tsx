@@ -15,6 +15,7 @@ import { Text } from "./text";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 const Form = FormProvider;
@@ -211,4 +212,45 @@ const FormInput = React.forwardRef<React.ElementRef<typeof Input>, FormItemProps
 
 FormInput.displayName = "FormInput";
 
-export { Form, FormDescription, FormField, FormInput, FormItem, FormLabel, useFormField };
+const FormSelect = React.forwardRef<
+	React.ElementRef<typeof Select>,
+	FormItemProps<typeof Select, string> & {
+		placeholder?: string;
+		options: { label: string; value: string }[];
+	}
+>(({ label, description, onChange, placeholder, options, ...props }, ref) => {
+	const { error, formItemNativeID, formDescriptionNativeID, formMessageNativeID } = useFormField();
+
+	return (
+		<FormItem>
+			{!!label && <FormLabel nativeID={formItemNativeID}>{label}</FormLabel>}
+
+			<Select
+				ref={ref}
+				aria-labelledby={formItemNativeID}
+				aria-describedby={!error ? `${formDescriptionNativeID}` : `${formDescriptionNativeID} ${formMessageNativeID}`}
+				aria-invalid={!!error}
+				onValueChange={onChange}
+				{...props}
+			>
+				<SelectTrigger>
+					<SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						{options.map((option) => (
+							<SelectItem key={option.value} label={option.label} value={option.value} />
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+
+			{!!description && <FormDescription>{description}</FormDescription>}
+			<FormMessage />
+		</FormItem>
+	);
+});
+
+FormSelect.displayName = "FormSelect";
+
+export { Form, FormDescription, FormField, FormInput, FormSelect, FormItem, FormLabel, useFormField };
