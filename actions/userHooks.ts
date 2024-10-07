@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
-const postUser = async (data) => {
+import { UserSignup } from "@/lib/models/user";
+
+const postUser = async (data: UserSignup) => {
 	const response = await axios.post("/users/", data);
 	return response.data;
 };
