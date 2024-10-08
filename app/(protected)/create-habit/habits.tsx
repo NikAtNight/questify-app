@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Search, Plus, Dot } from "lucide-react-native";
+import { Search, Plus } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 
@@ -29,17 +29,9 @@ export default function Habits() {
 		handleRefetch();
 	}, []);
 
-	if (isLoading || !habits) {
-		return <Text>Loading...</Text>;
-	}
-
 	return (
 		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
 			<View className="flex flex-row items-center justify-between w-full">
-				{/* Invisible button to evenly space the header */}
-				<Button className="invisible" variant="ghost" size="none">
-					<Dot />
-				</Button>
 				<H2>Search for Quests</H2>
 				<Button onPress={() => router.back()} variant="ghost" size="none">
 					<Plus />
@@ -52,37 +44,41 @@ export default function Habits() {
 				className="flex-1 w-full gap-y-4"
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 			>
-				{habits.map((habit: Habit) => {
-					return (
-						<Card className="w-full" key={habit.id}>
-							<CardHeader>
-								<View className="flex flex-row justify-between">
-									<CardTitle>{habit.name}</CardTitle>
-									<CardDescription>
-										{habit.category[0].name}
-										{habit.category.length > 1 ? ` +${habit.category.length - 1}` : ""}
-									</CardDescription>
-								</View>
-								<CardDescription>{habit.difficultyLevel}</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<Text>Objectives: {habit.milestones.length}</Text>
-								<View className="flex flex-row justify-between">
-									<Text>Skills: {habit.skills.length}</Text>
-									<Muted>{habit.skills.reduce((acc, curr) => acc + curr.points, 0)} points</Muted>
-								</View>
-							</CardContent>
-							<CardFooter className="flex flex-row justify-between">
-								<Button variant="secondary" className="w-[45%]">
-									<Text>View Skills</Text>
-								</Button>
-								<Button className="w-[45%]">
-									<Text>Track Quest</Text>
-								</Button>
-							</CardFooter>
-						</Card>
-					);
-				})}
+				{isLoading || !habits ? (
+					<Text>Loading...</Text>
+				) : (
+					habits.map((habit: Habit) => {
+						return (
+							<Card className="w-full" key={habit.id}>
+								<CardHeader>
+									<View className="flex flex-row justify-between">
+										<CardTitle>{habit.name}</CardTitle>
+										<CardDescription>
+											{habit.category[0].name}
+											{habit.category.length > 1 ? ` +${habit.category.length - 1}` : ""}
+										</CardDescription>
+									</View>
+									<CardDescription>{habit.difficultyLevel}</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<Text>Objectives: {habit.milestones.length}</Text>
+									<View className="flex flex-row justify-between">
+										<Text>Skills: {habit.skills.length}</Text>
+										<Muted>{habit.skills.reduce((acc, curr) => acc + curr.points, 0)} points</Muted>
+									</View>
+								</CardContent>
+								<CardFooter className="flex flex-row justify-between">
+									<Button variant="secondary" className="w-[45%]">
+										<Text>View Skills</Text>
+									</Button>
+									<Button className="w-[45%]">
+										<Text>Track Quest</Text>
+									</Button>
+								</CardFooter>
+							</Card>
+						);
+					})
+				)}
 			</ScrollView>
 		</SafeAreaView>
 	);

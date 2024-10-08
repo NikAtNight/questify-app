@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
-import { UserHabit } from "@/lib/models/habits";
+import { UserHabit, UserHabitRetrieve } from "@/lib/models/habits";
 
 const getHabits = async () => {
 	const response = await axios.get("/habits/");
@@ -21,4 +21,13 @@ const useGetUserHabits = () => {
 	return useQuery("getUserHabits", getUserHabits);
 };
 
-export { useGetHabits, useGetUserHabits };
+const getUserHabit = async (habitId: string) => {
+	const response = await axios.get(`/user-habits/${habitId}/`);
+	return response.data as UserHabitRetrieve;
+};
+
+const useGetUserHabit = (habitId: string) => {
+	return useQuery(["getUserHabit", habitId], () => getUserHabit(habitId));
+};
+
+export { useGetHabits, useGetUserHabits, useGetUserHabit };

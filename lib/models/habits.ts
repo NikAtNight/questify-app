@@ -27,7 +27,6 @@ export const HabitSchema = z.object({
 	),
 });
 
-// Infer TypeScript type from the schema
 export type Habit = z.infer<typeof HabitSchema>;
 
 export const UserHabitSchema = z.object({
@@ -46,5 +45,29 @@ export const UserHabitSchema = z.object({
 	notificationsEnabled: z.boolean(),
 });
 
-// Infer TypeScript type from the schema
 export type UserHabit = z.infer<typeof UserHabitSchema>;
+
+export const UserHabitRetrieveSchema = z.object({
+	id: z.string().uuid(),
+	habit: z.object({
+		name: z.string().max(255),
+		difficultyLevel: z.string().max(255),
+	}),
+	startDate: z.string().datetime(),
+	completionDate: z.string().datetime().nullable(),
+	status: z.enum(["Not Started", "In Progress", "Completed", "Abandoned"]),
+	currentStreak: z.number().int().min(0),
+	bestStreak: z.number().int().min(0),
+	totalDaysCompleted: z.number().int().min(0),
+	nextMilestone: z.number().int(),
+	nextSkillUnlock: z.string(),
+	progressPercentage: z.number().min(0).max(100),
+	notificationsEnabled: z.boolean(),
+	habitLogs: z.array(
+		z.object({
+			createdAt: z.string().datetime(),
+		}),
+	),
+});
+
+export type UserHabitRetrieve = z.infer<typeof UserHabitRetrieveSchema>;
