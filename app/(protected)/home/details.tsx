@@ -16,6 +16,7 @@ import moment from "moment";
 import { ScrollView, View } from "react-native";
 
 import { useGetUserHabit } from "@/actions/habitHooks";
+import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,9 +49,7 @@ const Details = () => {
 	return (
 		<SafeAreaView className="flex flex-1 bg-background">
 			{isLoading || !userHabit ? (
-				<View className="flex-1 items-center justify-center">
-					<Text>Loading...</Text>
-				</View>
+				<LoadingScreen />
 			) : (
 				<View className="flex flex-1">
 					<View className="flex flex-row items-center justify-between w-full p-4 border-b border-border">

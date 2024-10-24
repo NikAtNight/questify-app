@@ -2,14 +2,14 @@ import React from "react";
 import { View, ScrollView } from "react-native";
 
 import { useGetUser } from "@/actions/userHooks";
-import { Text } from "@/components/ui/text";
+import LoadingScreen from "@/components/loading-screen";
 import { H3 } from "@/components/ui/typography";
 
 export default function Main() {
 	const { data, isLoading } = useGetUser();
 
 	if (isLoading) {
-		return <Text>Loading...</Text>;
+		return <LoadingScreen />;
 	}
 
 	return (

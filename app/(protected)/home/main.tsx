@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 
 import { useGetUserHabits } from "@/actions/habitHooks";
+import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -72,7 +73,7 @@ export default function Home() {
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 			>
 				{isLoading || !userHabits ? (
-					<Text>Loading...</Text>
+					<LoadingScreen />
 				) : (
 					userHabits.map((item: UserHabit) => (
 						<Button
