@@ -38,7 +38,7 @@ export default function Habits() {
 				</Button>
 			</View>
 
-			<Input placeholder="" className="w-full" icon={<Search />} />
+			<Input placeholder="Search quests" className="w-full" icon={<Search />} />
 
 			<ScrollView
 				className="flex-1 w-full gap-y-4"

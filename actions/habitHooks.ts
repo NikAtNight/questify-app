@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 
 import { UserHabit, UserHabitRetrieve } from "@/lib/models/habits";
 

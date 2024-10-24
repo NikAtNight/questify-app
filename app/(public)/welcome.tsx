@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";
