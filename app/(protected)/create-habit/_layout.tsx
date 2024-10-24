@@ -4,9 +4,9 @@ import React from "react";
 export default function ProtectedLayout() {
 	return (
 		<Stack
-			screenOptions={({ route }) => ({
+			screenOptions={{
 				headerShown: false,
-			})}
+			}}
 		>
 			<Stack.Screen name="habits" />
 			<Stack.Screen name="skills" />

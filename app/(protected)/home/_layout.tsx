@@ -4,9 +4,9 @@ import React from "react";
 export default function HomeStack() {
 	return (
 		<Stack
-			screenOptions={({ route }) => ({
+			screenOptions={{
 				headerShown: false,
-			})}
+			}}
 		>
 			<Stack.Screen name="main" />
 			<Stack.Screen name="details" />

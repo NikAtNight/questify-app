@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouter } from "expo-router";
 import { Bell, BellOff, Plus, Play, CalendarPlus, Flame, Milestone, WandSparkles } from "lucide-react-native";
 import { useCallback, useState } from "react";
