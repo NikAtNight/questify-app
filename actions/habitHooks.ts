@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
-import { UserHabit, UserHabitRetrieve } from "@/lib/models/habits";
+import { UserHabit, UserHabitRetrieve, UserHabitUpdate } from "@/lib/models/habits";
 
 const getHabits = async () => {
 	const response = await axios.get("/habits/");
@@ -18,7 +18,7 @@ const getUserHabits = async () => {
 };
 
 const useGetUserHabits = () => {
-	return useQuery("getUserHabits", getUserHabits);
+	return useQuery("userHabits", getUserHabits);
 };
 
 const getUserHabit = async (habitId: string) => {
@@ -27,7 +27,33 @@ const getUserHabit = async (habitId: string) => {
 };
 
 const useGetUserHabit = (habitId: string) => {
-	return useQuery(["getUserHabit", habitId], () => getUserHabit(habitId));
+	return useQuery(["userHabit", habitId], () => getUserHabit(habitId));
 };
 
-export { useGetHabits, useGetUserHabits, useGetUserHabit };
+const updateUserHabit = async ({ habitId, data }: { habitId: string; data: UserHabitUpdate }) => {
+	const response = await axios.patch(`/user-habits/${habitId}/`, data);
+	return response.data;
+};
+
+const useUpdateUserHabit = () => {
+	return useMutation(updateUserHabit);
+};
+
+const trackUserHabit = async (data: { habit: string }) => {
+	try {
+		const response = await axios.post(`/habit-logs/`, data);
+		return response.data;
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			throw new Error(error.response?.data || error.message);
+		} else {
+			throw new Error("An unexpected error occurred. Please try again.");
+		}
+	}
+};
+
+const useTrackUserHabit = () => {
+	return useMutation(trackUserHabit);
+};
+
+export { useGetHabits, useGetUserHabits, useGetUserHabit, useUpdateUserHabit, useTrackUserHabit };

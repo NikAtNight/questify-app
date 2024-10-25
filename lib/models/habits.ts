@@ -42,7 +42,6 @@ export const UserHabitSchema = z.object({
 	nextMilestone: z.number().int(),
 	nextSkillUnlock: z.string().max(255),
 	progressPercentage: z.number().min(0).max(100),
-	notificationsEnabled: z.boolean(),
 });
 
 export type UserHabit = z.infer<typeof UserHabitSchema>;
@@ -50,8 +49,16 @@ export type UserHabit = z.infer<typeof UserHabitSchema>;
 export const UserHabitRetrieveSchema = z.object({
 	id: z.string().uuid(),
 	habit: z.object({
+		id: z.string().uuid(),
 		name: z.string().max(255),
 		difficultyLevel: z.string().max(255),
+		skills: z.array(
+			z.object({
+				id: z.string().uuid(),
+				name: z.string(),
+				milestones: z.number(),
+			}),
+		),
 	}),
 	startDate: z.string().datetime(),
 	completionDate: z.string().datetime().nullable(),
@@ -62,7 +69,6 @@ export const UserHabitRetrieveSchema = z.object({
 	nextMilestone: z.number().int(),
 	nextSkillUnlock: z.string(),
 	progressPercentage: z.number().min(0).max(100),
-	notificationsEnabled: z.boolean(),
 	habitLogs: z.array(
 		z.object({
 			createdAt: z.string().datetime(),
@@ -71,3 +77,9 @@ export const UserHabitRetrieveSchema = z.object({
 });
 
 export type UserHabitRetrieve = z.infer<typeof UserHabitRetrieveSchema>;
+
+export const UserHabitUpdateSchema = z.object({
+	status: z.enum(["Not Started", "In Progress", "Completed", "Abandoned"]),
+});
+
+export type UserHabitUpdate = z.infer<typeof UserHabitUpdateSchema>;

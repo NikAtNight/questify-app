@@ -3,6 +3,7 @@ import "axiosConfig";
 
 import { Stack } from "expo-router";
 import { PostHogProvider } from "posthog-react-native";
+import { LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -48,3 +49,5 @@ export default function RootLayout() {
 		</PostHogProvider>
 	);
 }
+
+LogBox.ignoreAllLogs();

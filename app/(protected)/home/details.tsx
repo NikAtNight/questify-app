@@ -1,35 +1,37 @@
-"use client";
-
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
 	ChevronLeft,
-	Dot,
-	TrendingUp,
 	Trophy,
 	WandSparkles,
 	Play,
 	Pause,
-	CalendarPlus,
+	Target,
 	CheckCircle2,
+	RotateCcw,
+	Flame,
+	Goal,
+	Lock,
 } from "lucide-react-native";
 import moment from "moment";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Alert } from "react-native";
 
-import { useGetUserHabit } from "@/actions/habitHooks";
+import { useGetUserHabit, useTrackUserHabit, useUpdateUserHabit } from "@/actions/habitHooks";
 import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { Text } from "@/components/ui/text";
-import { H2, H3 } from "@/components/ui/typography";
+import { H2 } from "@/components/ui/typography";
+import { UserHabitUpdate } from "@/lib/models/habits";
 
 const Details = () => {
 	const router = useRouter();
 	const params = useLocalSearchParams();
-	const { data: userHabit, isLoading } = useGetUserHabit(params.habitId as string);
+	const { data: userHabit, isLoading, refetch } = useGetUserHabit(params.habitId as string);
+	const { mutate: updateUserHabit } = useUpdateUserHabit();
+	const { mutate: trackUserHabit } = useTrackUserHabit();
 
 	const getStatusColor = (status: string) => {
 		switch (status.toLowerCase()) {
@@ -46,6 +48,31 @@ const Details = () => {
 		}
 	};
 
+	const handleTrackProgress = (habitId: string) => {
+		trackUserHabit(
+			{ habit: habitId },
+			{
+				onSuccess: () => {
+					refetch();
+				},
+				onError: (error: any) => {
+					return Alert.alert("Progress Tracked", error.message, [{ style: "cancel" }]);
+				},
+			},
+		);
+	};
+
+	const handleUpdateUserHabit = (habitId: string, data: UserHabitUpdate) => {
+		updateUserHabit(
+			{ habitId, data },
+			{
+				onSuccess: () => {
+					refetch();
+				},
+			},
+		);
+	};
+
 	return (
 		<SafeAreaView className="flex flex-1 bg-background">
 			{isLoading || !userHabit ? (
@@ -54,12 +81,39 @@ const Details = () => {
 				<View className="flex flex-1">
 					<View className="flex flex-row items-center justify-between w-full p-4 border-b border-border">
 						<Button onPress={() => router.back()} variant="ghost" size="icon">
-							<ChevronLeft className="h-6 w-6" />
+							<ChevronLeft />
 						</Button>
 						<H2>{userHabit.habit.name}</H2>
-						<Button className="invisible" variant="ghost" size="icon">
-							<Dot className="h-6 w-6" />
-						</Button>
+						<View>
+							{userHabit.status === "In Progress" && (
+								<Button
+									variant="ghost"
+									size="icon"
+									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "Abandoned" })}
+								>
+									<Pause />
+								</Button>
+							)}
+							{userHabit.status === "Not Started" ||
+								(userHabit.status === "Abandoned" && (
+									<Button
+										variant="ghost"
+										size="icon"
+										onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+									>
+										<Play />
+									</Button>
+								))}
+							{userHabit.status === "Completed" && (
+								<Button
+									variant="ghost"
+									size="icon"
+									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+								>
+									<RotateCcw />
+								</Button>
+							)}
+						</View>
 					</View>
 					<ScrollView className="flex-1 p-4">
 						<Card className="mb-4">
@@ -80,24 +134,25 @@ const Details = () => {
 						</Card>
 
 						<Card className="mb-4">
-							<CardContent className="flex flex-row justify-around items-center py-4">
-								<View className="items-center">
-									<H3>{userHabit.currentStreak}</H3>
-									<Text className="text-sm text-muted-foreground">Current Streak</Text>
-								</View>
-								<Separator orientation="vertical" className="h-10" />
-								<View className="items-center">
-									<H3>{userHabit.bestStreak}</H3>
-									<Text className="text-sm text-muted-foreground">Best Streak</Text>
-								</View>
-							</CardContent>
-						</Card>
-
-						<Card className="mb-4">
 							<CardHeader className="pb-4">
 								<CardTitle>Stats</CardTitle>
 							</CardHeader>
 							<CardContent className="gap-y-2">
+								<View className="flex flex-row justify-between items-center">
+									<View className="flex flex-row items-center gap-x-2">
+										<Flame className="bg-yellow-500" size={20} />
+										<Text>Current Streak</Text>
+									</View>
+									<Text className="font-semibold">{userHabit.currentStreak}</Text>
+								</View>
+								<View className="flex flex-row justify-between items-center">
+									<View className="flex flex-row items-center gap-x-2">
+										<Goal className="bg-yellow-500" size={20} />
+										<Text>Best Streak</Text>
+									</View>
+									<Text className="font-semibold">{userHabit.bestStreak}</Text>
+								</View>
+
 								<View className="flex flex-row justify-between items-center">
 									<View className="flex flex-row items-center gap-x-2">
 										<Trophy className="bg-yellow-500" size={20} />
@@ -105,20 +160,32 @@ const Details = () => {
 									</View>
 									<Text className="font-semibold">{userHabit.totalDaysCompleted}</Text>
 								</View>
-								<View className="flex flex-row justify-between items-center">
-									<View className="flex flex-row items-center gap-x-2">
-										<TrendingUp className="text-green-500" size={20} />
-										<Text>Next Milestone</Text>
+							</CardContent>
+						</Card>
+
+						<Card className="mb-4">
+							<CardHeader className="pb-4 flex flex-row items-center justify-between">
+								<CardTitle>Skills</CardTitle>
+								<Text>Next Unlock in {userHabit.nextMilestone - userHabit.currentStreak} days</Text>
+							</CardHeader>
+							<CardContent className="gap-y-2">
+								{userHabit.habit.skills.map((skill, i) => (
+									<View key={i} className="flex flex-row justify-between items-center">
+										{skill.milestones > userHabit.currentStreak ? (
+											<View className="flex flex-row items-center gap-x-2">
+												<Lock className="text-purple-500" size={20} />
+												<Text className="text-muted-foreground">{skill.name}</Text>
+											</View>
+										) : (
+											<View className="flex flex-row items-center gap-x-2">
+												<WandSparkles className="text-purple-500" size={20} />
+												<Text>{skill.name}</Text>
+											</View>
+										)}
+
+										<Text className="font-semibold">{skill.milestones}</Text>
 									</View>
-									<Text className="font-semibold">{userHabit.nextMilestone}</Text>
-								</View>
-								<View className="flex flex-row justify-between items-center">
-									<View className="flex flex-row items-center gap-x-2">
-										<WandSparkles className="text-purple-500" size={20} />
-										<Text>Next Skill Unlock</Text>
-									</View>
-									<Text className="font-semibold">{userHabit.nextSkillUnlock}</Text>
-								</View>
+								))}
 							</CardContent>
 						</Card>
 
@@ -146,22 +213,31 @@ const Details = () => {
 
 					<View className="p-4 border-t border-border pb-0">
 						{(userHabit.status === "Not Started" || userHabit.status === "Abandoned") && (
-							<Button className="w-full flex flex-row items-center gap-x-2">
+							<Button
+								className="w-full flex flex-row items-center gap-x-2"
+								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+							>
 								<Play />
 								<Text>Start Quest</Text>
 							</Button>
 						)}
 						{userHabit.status === "In Progress" && (
-							<View className="flex flex-col gap-y-2">
-								<Button className="w-full flex flex-row items-center gap-x-2" variant="secondary">
-									<Pause />
-									<Text>Pause Quest</Text>
-								</Button>
-								<Button className="w-full flex flex-row items-center gap-x-2">
-									<CalendarPlus />
-									<Text>Track Progress</Text>
-								</Button>
-							</View>
+							<Button
+								className="w-full flex flex-row items-center gap-x-2"
+								onPress={() => handleTrackProgress(userHabit.habit.id)}
+							>
+								<Target />
+								<Text>Track Progress</Text>
+							</Button>
+						)}
+						{userHabit.status === "Completed" && (
+							<Button
+								className="w-full flex flex-row items-center gap-x-2"
+								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+							>
+								<RotateCcw />
+								<Text>Restart Quest</Text>
+							</Button>
 						)}
 					</View>
 				</View>

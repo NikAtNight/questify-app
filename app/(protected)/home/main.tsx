@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
-import { Bell, BellOff, Plus, Play, CalendarPlus, Flame, Milestone, WandSparkles } from "lucide-react-native";
+import { Plus, Play, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
 import { useCallback, useState } from "react";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl, Alert } from "react-native";
 
-import { useGetUserHabits } from "@/actions/habitHooks";
+import { useGetUserHabits, useUpdateUserHabit, useTrackUserHabit } from "@/actions/habitHooks";
 import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,8 @@ import { type UserHabit } from "@/lib/models/habits";
 export default function Home() {
 	const router = useRouter();
 	const { data: userHabits, isLoading, refetch } = useGetUserHabits();
+	const { mutate: updateUserHabit } = useUpdateUserHabit();
+	const { mutate: trackUserHabit } = useTrackUserHabit();
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -58,12 +60,40 @@ export default function Home() {
 		}
 	};
 
+	const handleStartQuest = (habitId: string) => {
+		updateUserHabit(
+			{ habitId, data: { status: "In Progress" } },
+			{
+				onSuccess: () => {
+					refetch();
+				},
+				onError: (error) => {
+					console.error("Error updating habit:", error);
+				},
+			},
+		);
+	};
+
+	const handleTrackProgress = (habitId: string) => {
+		trackUserHabit(
+			{ habit: habitId },
+			{
+				onSuccess: () => {
+					refetch();
+				},
+				onError: (error: any) => {
+					return Alert.alert("Progress Tracked", error.message, [{ style: "cancel" }]);
+				},
+			},
+		);
+	};
+
 	return (
 		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
 			<View className="flex flex-row items-center justify-between w-full">
 				<H2>Active Quests</H2>
 				<Button onPress={() => router.back()} variant="ghost" size="icon">
-					<Plus className="h-4 w-4" />
+					<Plus />
 				</Button>
 			</View>
 			<ScrollView
@@ -92,8 +122,8 @@ export default function Home() {
 								<CardHeader className="pb-2">
 									<View className="flex flex-row justify-between items-center">
 										<H4>{item.habit.name}</H4>
-										<Badge variant="secondary" className={`${getDifficultyColor(item.habit.difficultyLevel)}`}>
-											<Text>{item.habit.difficultyLevel}</Text>
+										<Badge variant="outline" className={`${getStatusColor(item.status)}`}>
+											<Text>{item.status}</Text>
 										</Badge>
 									</View>
 								</CardHeader>
@@ -102,51 +132,49 @@ export default function Home() {
 										<Progress value={item.progressPercentage} className="h-2" />
 										<View className="flex flex-row justify-between pt-4">
 											<Muted>Progress: {item.progressPercentage}%</Muted>
-											<Badge variant="outline" className={`${getStatusColor(item.status)}`}>
-												<Text>{item.status}</Text>
+											<Badge variant="secondary" className={`${getDifficultyColor(item.habit.difficultyLevel)}`}>
+												<Text>{item.habit.difficultyLevel}</Text>
 											</Badge>
 										</View>
 									</View>
-									<View className="flex flex-row justify-between pb-4">
+									<View className="flex flex-row flex-wrap justify-between gap-y-2 pb-4">
 										<View className="flex flex-row items-center gap-x-2">
-											<Flame size={16} className="text-orange-500" />
-											<Text className="text-sm">{item.currentStreak} day streak</Text>
+											<WandSparkles size={16} className="text-purple-500" />
+											<Text className="text-sm">Next: {item.nextSkillUnlock}</Text>
 										</View>
+
 										<View className="flex flex-row items-center gap-x-2">
 											<Milestone size={16} className="text-blue-500" />
 											<Text className="text-sm">{item.nextMilestone - item.currentStreak} days to milestone</Text>
 										</View>
 									</View>
-									<View className="flex flex-row items-center gap-x-2 pb-4">
-										<WandSparkles size={16} className="text-purple-500" />
-										<Text className="text-sm">Next: {item.nextSkillUnlock}</Text>
-									</View>
 									<View className="flex flex-row justify-between items-center">
 										{(item.status === "Not Started" || item.status === "Abandoned") && (
-											<Button className="flex flex-row items-center gap-x-2" size="sm">
+											<Button
+												className="flex flex-row items-center gap-x-2"
+												size="sm"
+												onPress={() => handleStartQuest(item.id)}
+											>
 												<Play />
-												<Text className="text-sm">Start Quest</Text>
+												<Text>Start Quest</Text>
 											</Button>
 										)}
 										{item.status === "In Progress" && (
-											<Button className="flex flex-row items-center gap-x-2" size="sm">
-												<CalendarPlus />
-												<Text className="text-sm">Track Progress</Text>
+											<Button
+												className="flex flex-row items-center gap-x-2"
+												size="sm"
+												onPress={() => handleTrackProgress(item.habit.id)}
+											>
+												<Target />
+												<Text>Track Progress</Text>
 											</Button>
 										)}
-										<Button
-											variant="ghost"
-											size="icon"
-											onPress={(e) => {
-												e.preventDefault();
-											}}
-										>
-											{item.notificationsEnabled ? (
-												<Bell className="h-4 w-4 text-primary" />
-											) : (
-												<BellOff className="h-4 w-4 text-muted-foreground" />
-											)}
-										</Button>
+										{item.currentStreak >= 3 && (
+											<View className="flex flex-row items-center gap-x-2">
+												<Flame size={16} className="text-orange-500" />
+												<Text className="text-sm">{item.currentStreak} day streak</Text>
+											</View>
+										)}
 									</View>
 								</CardContent>
 							</Card>

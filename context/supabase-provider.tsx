@@ -1,7 +1,7 @@
 import { Session, User } from "@supabase/supabase-js";
 import { usePostUser } from "actions/userHooks";
 import { useRouter, useSegments, SplashScreen } from "expo-router";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { create } from "zustand";
 
 import { supabase } from "@/config/supabase";
