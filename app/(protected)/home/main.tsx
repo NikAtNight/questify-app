@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Scroll, Play, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
+import { Scroll, Sword, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl, Alert } from "react-native";
 
@@ -135,7 +135,7 @@ export default function Home() {
 												size="sm"
 												onPress={() => handleStartQuest(item.id)}
 											>
-												<Play />
+												<Sword />
 												<Text>Start Quest</Text>
 											</Button>
 										)}

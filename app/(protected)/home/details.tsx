@@ -3,7 +3,7 @@ import {
 	ChevronLeft,
 	Trophy,
 	WandSparkles,
-	Play,
+	Sword,
 	Target,
 	CheckCircle2,
 	RotateCcw,
@@ -86,7 +86,7 @@ const Details = () => {
 									size="icon"
 									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
 								>
-									<Play />
+									<Sword />
 								</Button>
 							)}
 							{userHabit.status === "COMPLETED" && (
@@ -207,7 +207,7 @@ const Details = () => {
 								className="w-full flex flex-row items-center gap-x-2"
 								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
 							>
-								<Play />
+								<Sword />
 								<Text>Start Quest</Text>
 							</Button>
 						)}
