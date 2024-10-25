@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const DIFFICULTY_LEVELS = ["EASY", "MEDIUM", "HARD"] as const;
+export const STATUS_LEVELS = ["NOT_STARTED", "IN_PROGRESS", "COMPLETED", "ABANDONED"] as const;
+
+export const DIFFICULTY_LEVELS_MAP = {
+	EASY: "Easy",
+	MEDIUM: "Medium",
+	HARD: "Hard",
+};
+
+export const STATUS_LEVELS_MAP = {
+	NOT_STARTED: "Not Started",
+	IN_PROGRESS: "In Progress",
+	COMPLETED: "Completed",
+	ABANDONED: "Abandoned",
+};
+
 export const HabitSchema = z.object({
 	id: z.string().uuid(),
 	name: z.string().max(255),
@@ -9,7 +25,7 @@ export const HabitSchema = z.object({
 			name: z.string(),
 		}),
 	),
-	difficultyLevel: z.enum(["Easy", "Medium", "Hard"]),
+	difficultyLevel: z.enum(DIFFICULTY_LEVELS),
 	milestones: z.array(
 		z.object({
 			day: z.number(),
@@ -35,9 +51,9 @@ export const UserHabitSchema = z.object({
 	habit: z.object({
 		id: z.string().uuid(),
 		name: z.string().max(255),
-		difficultyLevel: z.string().max(255),
+		difficultyLevel: z.enum(DIFFICULTY_LEVELS),
 	}),
-	status: z.enum(["Not Started", "In Progress", "Completed", "Abandoned"]),
+	status: z.enum(STATUS_LEVELS),
 	currentStreak: z.number().int().min(0),
 	nextMilestone: z.number().int(),
 	nextSkillUnlock: z.string().max(255),
@@ -51,7 +67,7 @@ export const UserHabitRetrieveSchema = z.object({
 	habit: z.object({
 		id: z.string().uuid(),
 		name: z.string().max(255),
-		difficultyLevel: z.string().max(255),
+		difficultyLevel: z.enum(DIFFICULTY_LEVELS),
 		skills: z.array(
 			z.object({
 				id: z.string().uuid(),
@@ -62,7 +78,7 @@ export const UserHabitRetrieveSchema = z.object({
 	}),
 	startDate: z.string().datetime(),
 	completionDate: z.string().datetime().nullable(),
-	status: z.enum(["Not Started", "In Progress", "Completed", "Abandoned"]),
+	status: z.enum(STATUS_LEVELS),
 	currentStreak: z.number().int().min(0),
 	bestStreak: z.number().int().min(0),
 	totalDaysCompleted: z.number().int().min(0),
@@ -79,7 +95,7 @@ export const UserHabitRetrieveSchema = z.object({
 export type UserHabitRetrieve = z.infer<typeof UserHabitRetrieveSchema>;
 
 export const UserHabitUpdateSchema = z.object({
-	status: z.enum(["Not Started", "In Progress", "Completed", "Abandoned"]),
+	status: z.enum(STATUS_LEVELS),
 });
 
 export type UserHabitUpdate = z.infer<typeof UserHabitUpdateSchema>;

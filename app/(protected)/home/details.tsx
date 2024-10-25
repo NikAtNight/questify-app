@@ -4,13 +4,13 @@ import {
 	Trophy,
 	WandSparkles,
 	Play,
-	Pause,
 	Target,
 	CheckCircle2,
 	RotateCcw,
 	Flame,
 	Goal,
 	Lock,
+	ShieldOff,
 } from "lucide-react-native";
 import moment from "moment";
 import { ScrollView, View, Alert } from "react-native";
@@ -24,7 +24,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { H2 } from "@/components/ui/typography";
-import { UserHabitUpdate } from "@/lib/models/habits";
+import { UserHabitUpdate, STATUS_LEVELS_MAP, DIFFICULTY_LEVELS_MAP } from "@/lib/models/habits";
+import { getDifficultyColor, getStatusColor } from "@/lib/utils";
 
 const Details = () => {
 	const router = useRouter();
@@ -32,21 +33,6 @@ const Details = () => {
 	const { data: userHabit, isLoading, refetch } = useGetUserHabit(params.habitId as string);
 	const { mutate: updateUserHabit } = useUpdateUserHabit();
 	const { mutate: trackUserHabit } = useTrackUserHabit();
-
-	const getStatusColor = (status: string) => {
-		switch (status.toLowerCase()) {
-			case "not started":
-				return "bg-gray-500";
-			case "in progress":
-				return "bg-blue-500";
-			case "completed":
-				return "bg-green-500";
-			case "abandoned":
-				return "bg-red-500";
-			default:
-				return "bg-gray-500";
-		}
-	};
 
 	const handleTrackProgress = (habitId: string) => {
 		trackUserHabit(
@@ -85,30 +71,29 @@ const Details = () => {
 						</Button>
 						<H2>{userHabit.habit.name}</H2>
 						<View>
-							{userHabit.status === "In Progress" && (
+							{userHabit.status === "IN_PROGRESS" && (
 								<Button
 									variant="ghost"
 									size="icon"
-									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "Abandoned" })}
+									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "ABANDONED" })}
 								>
-									<Pause />
+									<ShieldOff />
 								</Button>
 							)}
-							{userHabit.status === "Not Started" ||
-								(userHabit.status === "Abandoned" && (
-									<Button
-										variant="ghost"
-										size="icon"
-										onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
-									>
-										<Play />
-									</Button>
-								))}
-							{userHabit.status === "Completed" && (
+							{(userHabit.status === "NOT_STARTED" || userHabit.status === "ABANDONED") && (
 								<Button
 									variant="ghost"
 									size="icon"
-									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
+								>
+									<Play />
+								</Button>
+							)}
+							{userHabit.status === "COMPLETED" && (
+								<Button
+									variant="ghost"
+									size="icon"
+									onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
 								>
 									<RotateCcw />
 								</Button>
@@ -121,15 +106,20 @@ const Details = () => {
 								<View className="flex flex-row items-center justify-between">
 									<CardTitle>Progress</CardTitle>
 									<Badge variant="secondary" className={`mb-2 ${getStatusColor(userHabit.status)}`}>
-										<Text>{userHabit.status}</Text>
+										<Text>{STATUS_LEVELS_MAP[userHabit.status]}</Text>
 									</Badge>
 								</View>
 							</CardHeader>
 							<CardContent className="gap-y-2 mt-2">
 								<Progress value={userHabit.progressPercentage} className="h-2 mb-1" />
-								<Text className="text-right text-sm text-muted-foreground">
-									{userHabit.progressPercentage}% Complete
-								</Text>
+								<View className="flex flex-row justify-between items-center">
+									<Text className="text-right text-sm text-muted-foreground">
+										{userHabit.progressPercentage}% Complete
+									</Text>
+									<Badge variant="secondary" className={`${getDifficultyColor(userHabit.habit.difficultyLevel)}`}>
+										<Text>{DIFFICULTY_LEVELS_MAP[userHabit.habit.difficultyLevel]}</Text>
+									</Badge>
+								</View>
 							</CardContent>
 						</Card>
 
@@ -212,16 +202,16 @@ const Details = () => {
 					</ScrollView>
 
 					<View className="p-4 border-t border-border pb-0">
-						{(userHabit.status === "Not Started" || userHabit.status === "Abandoned") && (
+						{(userHabit.status === "NOT_STARTED" || userHabit.status === "ABANDONED") && (
 							<Button
 								className="w-full flex flex-row items-center gap-x-2"
-								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
 							>
 								<Play />
 								<Text>Start Quest</Text>
 							</Button>
 						)}
-						{userHabit.status === "In Progress" && (
+						{userHabit.status === "IN_PROGRESS" && (
 							<Button
 								className="w-full flex flex-row items-center gap-x-2"
 								onPress={() => handleTrackProgress(userHabit.habit.id)}
@@ -230,10 +220,10 @@ const Details = () => {
 								<Text>Track Progress</Text>
 							</Button>
 						)}
-						{userHabit.status === "Completed" && (
+						{userHabit.status === "COMPLETED" && (
 							<Button
 								className="w-full flex flex-row items-center gap-x-2"
-								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "In Progress" })}
+								onPress={() => handleUpdateUserHabit(userHabit.id, { status: "IN_PROGRESS" })}
 							>
 								<RotateCcw />
 								<Text>Restart Quest</Text>

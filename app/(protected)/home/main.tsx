@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Plus, Play, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
+import { Scroll, Play, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl, Alert } from "react-native";
 
@@ -12,7 +12,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { Muted, H2, H4 } from "@/components/ui/typography";
-import { type UserHabit } from "@/lib/models/habits";
+import { type UserHabit, STATUS_LEVELS_MAP, DIFFICULTY_LEVELS_MAP } from "@/lib/models/habits";
+import { getDifficultyColor, getStatusColor } from "@/lib/utils";
 
 export default function Home() {
 	const router = useRouter();
@@ -32,37 +33,9 @@ export default function Home() {
 		handleRefetch();
 	}, []);
 
-	const getDifficultyColor = (level: string) => {
-		switch (level.toLowerCase()) {
-			case "easy":
-				return "bg-green-500";
-			case "medium":
-				return "bg-yellow-500";
-			case "hard":
-				return "bg-red-500";
-			default:
-				return "bg-gray-500";
-		}
-	};
-
-	const getStatusColor = (status: string) => {
-		switch (status.toLowerCase()) {
-			case "not started":
-				return "bg-gray-500";
-			case "in progress":
-				return "bg-blue-500";
-			case "completed":
-				return "bg-green-500";
-			case "abandoned":
-				return "bg-red-500";
-			default:
-				return "bg-gray-500";
-		}
-	};
-
 	const handleStartQuest = (habitId: string) => {
 		updateUserHabit(
-			{ habitId, data: { status: "In Progress" } },
+			{ habitId, data: { status: "IN_PROGRESS" } },
 			{
 				onSuccess: () => {
 					refetch();
@@ -93,7 +66,7 @@ export default function Home() {
 			<View className="flex flex-row items-center justify-between w-full">
 				<H2>Active Quests</H2>
 				<Button onPress={() => router.back()} variant="ghost" size="icon">
-					<Plus />
+					<Scroll />
 				</Button>
 			</View>
 			<ScrollView
@@ -123,7 +96,7 @@ export default function Home() {
 									<View className="flex flex-row justify-between items-center">
 										<H4>{item.habit.name}</H4>
 										<Badge variant="outline" className={`${getStatusColor(item.status)}`}>
-											<Text>{item.status}</Text>
+											<Text>{STATUS_LEVELS_MAP[item.status]}</Text>
 										</Badge>
 									</View>
 								</CardHeader>
@@ -133,11 +106,11 @@ export default function Home() {
 										<View className="flex flex-row justify-between pt-4">
 											<Muted>Progress: {item.progressPercentage}%</Muted>
 											<Badge variant="secondary" className={`${getDifficultyColor(item.habit.difficultyLevel)}`}>
-												<Text>{item.habit.difficultyLevel}</Text>
+												<Text>{DIFFICULTY_LEVELS_MAP[item.habit.difficultyLevel]}</Text>
 											</Badge>
 										</View>
 									</View>
-									<View className="flex flex-row flex-wrap justify-between gap-y-2 pb-4">
+									<View className="flex flex-coljustify-between gap-y-2 pb-4">
 										<View className="flex flex-row items-center gap-x-2">
 											<WandSparkles size={16} className="text-purple-500" />
 											<Text className="text-sm">Next: {item.nextSkillUnlock}</Text>
@@ -147,9 +120,16 @@ export default function Home() {
 											<Milestone size={16} className="text-blue-500" />
 											<Text className="text-sm">{item.nextMilestone - item.currentStreak} days to milestone</Text>
 										</View>
+
+										{item.currentStreak >= 3 && (
+											<View className="flex flex-row items-center gap-x-2">
+												<Flame size={16} className="text-orange-500" />
+												<Text className="text-sm">{item.currentStreak} day streak</Text>
+											</View>
+										)}
 									</View>
-									<View className="flex flex-row justify-between items-center">
-										{(item.status === "Not Started" || item.status === "Abandoned") && (
+									<View className="flex flex-row-reverse justify-between items-center">
+										{(item.status === "NOT_STARTED" || item.status === "ABANDONED") && (
 											<Button
 												className="flex flex-row items-center gap-x-2"
 												size="sm"
@@ -159,7 +139,7 @@ export default function Home() {
 												<Text>Start Quest</Text>
 											</Button>
 										)}
-										{item.status === "In Progress" && (
+										{item.status === "IN_PROGRESS" && (
 											<Button
 												className="flex flex-row items-center gap-x-2"
 												size="sm"
@@ -168,12 +148,6 @@ export default function Home() {
 												<Target />
 												<Text>Track Progress</Text>
 											</Button>
-										)}
-										{item.currentStreak >= 3 && (
-											<View className="flex flex-row items-center gap-x-2">
-												<Flame size={16} className="text-orange-500" />
-												<Text className="text-sm">{item.currentStreak} day streak</Text>
-											</View>
 										)}
 									</View>
 								</CardContent>
