@@ -16,18 +16,17 @@ export default function ProtectedLayout() {
 				headerShown: false,
 				tabBarStyle: {
 					backgroundColor: colors.background,
-					// display: route.name === "create-habit" ? "none" : "flex",
 				},
 				tabBarShowLabel: false,
 				tabBarIcon: ({ color }) => {
 					if (route.name === "home") return <Shield color={color} />;
-					if (route.name === "create-habit") return <Swords color={color} />;
+					if (route.name === "quests") return <Swords color={color} />;
 					if (route.name === "profile") return <Crown color={color} />;
 				},
 			})}
 		>
 			<Tabs.Screen name="home" />
-			<Tabs.Screen name="create-habit" />
+			<Tabs.Screen name="quests" />
 			<Tabs.Screen name="profile" />
 		</Tabs>
 	);

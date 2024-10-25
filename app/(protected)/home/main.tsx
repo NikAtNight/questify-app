@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Scroll, Sword, Flame, Milestone, WandSparkles, Target } from "lucide-react-native";
+import { Scroll, Sword, Flame, Milestone, WandSparkles, Target, ShieldQuestion } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl, Alert } from "react-native";
 
@@ -69,14 +69,20 @@ export default function Home() {
 					<Scroll />
 				</Button>
 			</View>
-			<ScrollView
-				className="flex-1 w-full space-y-4"
-				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-			>
-				{isLoading || !userHabits ? (
-					<LoadingScreen />
-				) : (
-					userHabits.map((item: UserHabit) => (
+
+			{isLoading || !userHabits ? (
+				<LoadingScreen />
+			) : userHabits && userHabits.length === 0 ? (
+				<View className="flex-1 items-center justify-center gap-y-4">
+					<ShieldQuestion size={100} color="gray" style={{ opacity: 0.5 }} />
+					<Text>No active quests</Text>
+				</View>
+			) : (
+				<ScrollView
+					className="flex-1 w-full space-y-4"
+					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+				>
+					{userHabits.map((item: UserHabit) => (
 						<Button
 							key={item.id}
 							className="w-full"
@@ -153,9 +159,9 @@ export default function Home() {
 								</CardContent>
 							</Card>
 						</Button>
-					))
-				)}
-			</ScrollView>
+					))}
+				</ScrollView>
+			)}
 		</SafeAreaView>
 	);
 }
