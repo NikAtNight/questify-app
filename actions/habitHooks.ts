@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import { UserHabit, UserHabitRetrieve, UserHabitUpdate } from "@/lib/models/habits";
 
@@ -36,9 +36,14 @@ const updateUserHabit = async ({ habitId, data }: { habitId: string; data: UserH
 };
 
 const useUpdateUserHabit = () => {
-	return useMutation(updateUserHabit);
-};
+	const queryClient = useQueryClient();
 
+	return useMutation(updateUserHabit, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("userHabits");
+		},
+	});
+};
 const trackUserHabit = async (data: { habit: string }) => {
 	try {
 		const response = await axios.post(`/habit-logs/`, data);

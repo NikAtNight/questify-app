@@ -33,16 +33,16 @@ export default function Habits() {
 	return (
 		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
 			<View className="flex flex-row items-center justify-between w-full">
-				<H2>Search for Quests</H2>
+				<H2>Available Quests</H2>
 				<Button onPress={() => router.back()} variant="ghost" size="none">
 					<Plus />
 				</Button>
 			</View>
 
-			<Input placeholder="Search quests" className="w-full" icon={<Search />} />
+			<Input placeholder="Search for quests" className="w-full" icon={<Search />} />
 
 			<ScrollView
-				className="flex-1 w-full gap-y-4"
+				className="flex-1 w-full space-y-4"
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 			>
 				{isLoading || !habits ? (

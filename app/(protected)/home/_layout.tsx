@@ -10,6 +10,7 @@ export default function HomeStack() {
 		>
 			<Stack.Screen name="main" />
 			<Stack.Screen name="details" />
+			<Stack.Screen name="archives" />
 		</Stack>
 	);
 }

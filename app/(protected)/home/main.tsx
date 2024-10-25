@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Scroll, Sword, Flame, Milestone, WandSparkles, Target, ShieldQuestion } from "lucide-react-native";
+import { ScrollText, Sword, Flame, Milestone, WandSparkles, Target, FlameKindling } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { View, ScrollView, RefreshControl, Alert } from "react-native";
 
@@ -61,28 +61,35 @@ export default function Home() {
 		);
 	};
 
-	return (
-		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
-			<View className="flex flex-row items-center justify-between w-full">
-				<H2>Active Quests</H2>
-				<Button onPress={() => router.back()} variant="ghost" size="icon">
-					<Scroll />
-				</Button>
-			</View>
+	const renderContent = () => {
+		if (isLoading || !userHabits) {
+			return <LoadingScreen />;
+		}
 
-			{isLoading || !userHabits ? (
-				<LoadingScreen />
-			) : userHabits && userHabits.length === 0 ? (
-				<View className="flex-1 items-center justify-center gap-y-4">
-					<ShieldQuestion size={100} color="gray" style={{ opacity: 0.5 }} />
-					<Text>No active quests</Text>
-				</View>
-			) : (
+		if (userHabits.length === 0) {
+			return (
 				<ScrollView
-					className="flex-1 w-full space-y-4"
+					contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				>
-					{userHabits.map((item: UserHabit) => (
+					<View className="items-center justify-center gap-y-4">
+						<FlameKindling size={100} color="gray" style={{ opacity: 0.5 }} />
+						<Text>No active quests</Text>
+					</View>
+				</ScrollView>
+			);
+		}
+
+		return (
+			<ScrollView
+				className="flex-1 w-full space-y-4"
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+			>
+				{userHabits.map((item: UserHabit) => {
+					const statusColor = getStatusColor(item.status);
+					const difficultyColor = getDifficultyColor(item.habit.difficultyLevel);
+
+					return (
 						<Button
 							key={item.id}
 							className="w-full"
@@ -97,11 +104,11 @@ export default function Home() {
 								});
 							}}
 						>
-							<Card key={item.id} className="w-full overflow-hidden">
+							<Card key={item.id} className="w-full">
 								<CardHeader className="pb-2">
 									<View className="flex flex-row justify-between items-center">
 										<H4>{item.habit.name}</H4>
-										<Badge variant="outline" className={`${getStatusColor(item.status)}`}>
+										<Badge variant="secondary" className={statusColor}>
 											<Text>{STATUS_LEVELS_MAP[item.status]}</Text>
 										</Badge>
 									</View>
@@ -111,7 +118,7 @@ export default function Home() {
 										<Progress value={item.progressPercentage} className="h-2" />
 										<View className="flex flex-row justify-between pt-4">
 											<Muted>Progress: {item.progressPercentage}%</Muted>
-											<Badge variant="secondary" className={`${getDifficultyColor(item.habit.difficultyLevel)}`}>
+											<Badge variant="secondary" className={difficultyColor}>
 												<Text>{DIFFICULTY_LEVELS_MAP[item.habit.difficultyLevel]}</Text>
 											</Badge>
 										</View>
@@ -159,9 +166,21 @@ export default function Home() {
 								</CardContent>
 							</Card>
 						</Button>
-					))}
-				</ScrollView>
-			)}
+					);
+				})}
+			</ScrollView>
+		);
+	};
+
+	return (
+		<SafeAreaView className="flex-1 items-center bg-background p-4 gap-y-4">
+			<View className="flex flex-row items-center justify-between w-full">
+				<H2>Active Quests</H2>
+				<Button onPress={() => router.push("/(protected)/home/archives")} variant="ghost" size="icon">
+					<ScrollText />
+				</Button>
+			</View>
+			{renderContent()}
 		</SafeAreaView>
 	);
 }
