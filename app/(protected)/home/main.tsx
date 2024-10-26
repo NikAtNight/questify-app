@@ -125,11 +125,6 @@ export default function Home() {
 									</View>
 									<View className="flex flex-coljustify-between gap-y-2 pb-4">
 										<View className="flex flex-row items-center gap-x-2">
-											<WandSparkles size={16} className="text-purple-500" />
-											<Text className="text-sm">Next: {item.nextSkillUnlock}</Text>
-										</View>
-
-										<View className="flex flex-row items-center gap-x-2">
 											<Milestone size={16} className="text-blue-500" />
 											<Text className="text-sm">{item.nextMilestone - item.currentStreak} days to milestone</Text>
 										</View>

@@ -155,25 +155,24 @@ const Details = () => {
 
 						<Card className="mb-4">
 							<CardHeader className="pb-4 flex flex-row items-center justify-between">
-								<CardTitle>Skills</CardTitle>
+								<CardTitle>Milestones</CardTitle>
 								<Text>Next Unlock in {userHabit.nextMilestone - userHabit.currentStreak} days</Text>
 							</CardHeader>
 							<CardContent className="gap-y-2">
-								{userHabit.habit.skills.map((skill, i) => (
+								{userHabit.habit.milestones.map((milestone, i) => (
 									<View key={i} className="flex flex-row justify-between items-center">
-										{skill.milestones > userHabit.currentStreak ? (
+										{milestone.day > userHabit.currentStreak ? (
 											<View className="flex flex-row items-center gap-x-2">
 												<Lock className="text-purple-500" size={20} />
-												<Text className="text-muted-foreground">{skill.name}</Text>
+												<Text className="text-muted-foreground">{milestone.name}</Text>
 											</View>
 										) : (
 											<View className="flex flex-row items-center gap-x-2">
 												<WandSparkles className="text-purple-500" size={20} />
-												<Text>{skill.name}</Text>
+												<Text>{milestone.name}</Text>
 											</View>
 										)}
-
-										<Text className="font-semibold">{skill.milestones}</Text>
+										<Text className="font-semibold">{milestone.day}</Text>
 									</View>
 								))}
 							</CardContent>

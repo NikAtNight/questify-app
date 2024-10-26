@@ -29,16 +29,8 @@ export const HabitSchema = z.object({
 	milestones: z.array(
 		z.object({
 			day: z.number(),
-			title: z.string(),
-		}),
-	),
-	skills: z.array(
-		z.object({
-			id: z.string().uuid(),
-			name: z.string(),
-			description: z.string(),
+			label: z.string(),
 			points: z.number(),
-			milestones: z.string().uuid(),
 		}),
 	),
 });
@@ -56,7 +48,6 @@ export const UserHabitSchema = z.object({
 	status: z.enum(STATUS_LEVELS),
 	currentStreak: z.number().int().min(0),
 	nextMilestone: z.number().int(),
-	nextSkillUnlock: z.string().max(255),
 	progressPercentage: z.number().min(0).max(100),
 });
 
@@ -68,11 +59,10 @@ export const UserHabitRetrieveSchema = z.object({
 		id: z.string().uuid(),
 		name: z.string().max(255),
 		difficultyLevel: z.enum(DIFFICULTY_LEVELS),
-		skills: z.array(
+		milestones: z.array(
 			z.object({
-				id: z.string().uuid(),
+				day: z.number(),
 				name: z.string(),
-				milestones: z.number(),
 			}),
 		),
 	}),
@@ -83,7 +73,6 @@ export const UserHabitRetrieveSchema = z.object({
 	bestStreak: z.number().int().min(0),
 	totalDaysCompleted: z.number().int().min(0),
 	nextMilestone: z.number().int(),
-	nextSkillUnlock: z.string(),
 	progressPercentage: z.number().min(0).max(100),
 	habitLogs: z.array(
 		z.object({
