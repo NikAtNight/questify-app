@@ -10,6 +10,9 @@ axios.interceptors.request.use(
 			data: { session },
 		} = await supabase.auth.getSession();
 
+		const timezone = global.Intl.DateTimeFormat().resolvedOptions().timeZone;
+		config.headers["X-Timezone"] = timezone;
+
 		if (session && session.access_token) {
 			config.headers.Authorization = `Bearer ${session.access_token}`;
 		}
