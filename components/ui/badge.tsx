@@ -62,7 +62,7 @@ type BadgeProps = SlottableViewProps &
 
 function Badge({ className, variant, asChild, status, ...props }: BadgeProps) {
 	const Component = asChild ? Slot.View : View;
-	const color = status ? getColor(status) : null;
+	const color = status ? getColor(status) : "";
 
 	return (
 		<TextClassContext.Provider value={badgeTextVariants({ variant })}>
