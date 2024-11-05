@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { H2, H4, Muted } from "@/components/ui/typography";
 import { DIFFICULTY_LEVELS_MAP, type Habit } from "@/lib/models/habits";
-import { getDifficultyColor } from "@/lib/utils";
 
 export default function AvailableQuests() {
 	const router = useRouter();
@@ -60,7 +59,7 @@ export default function AvailableQuests() {
 							<CardHeader>
 								<View className="flex-row justify-between items-center">
 									<H4>{habit.name}</H4>
-									<Badge variant="secondary" className={getDifficultyColor(habit.difficultyLevel)}>
+									<Badge variant="secondary" status={habit.difficultyLevel}>
 										<Text>{DIFFICULTY_LEVELS_MAP[habit.difficultyLevel]}</Text>
 									</Badge>
 								</View>

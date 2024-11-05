@@ -7,6 +7,23 @@ import type { SlottableViewProps } from "../primitives/types";
 
 import { cn } from "@/lib/utils";
 
+export const getColor = (value: string) => {
+	switch (value) {
+		case "EASY":
+		case "COMPLETED":
+			return "bg-green-500";
+		case "MEDIUM":
+			return "bg-yellow-500";
+		case "HARD":
+		case "ABANDONED":
+			return "bg-red-500";
+		case "IN_PROGRESS":
+			return "bg-blue-500";
+		default:
+			return "bg-gray-500";
+	}
+};
+
 const badgeVariants = cva(
 	"web:inline-flex items-center rounded-full border border-border px-2.5 py-0.5 web:transition-colors web:focus:outline-none web:focus:ring-2 web:focus:ring-ring web:focus:ring-offset-2",
 	{
@@ -38,13 +55,18 @@ const badgeTextVariants = cva("text-xs font-semibold ", {
 	},
 });
 
-type BadgeProps = SlottableViewProps & VariantProps<typeof badgeVariants>;
+type BadgeProps = SlottableViewProps &
+	VariantProps<typeof badgeVariants> & {
+		status?: string;
+	};
 
-function Badge({ className, variant, asChild, ...props }: BadgeProps) {
+function Badge({ className, variant, asChild, status, ...props }: BadgeProps) {
 	const Component = asChild ? Slot.View : View;
+	const color = status ? getColor(status) : null;
+
 	return (
 		<TextClassContext.Provider value={badgeTextVariants({ variant })}>
-			<Component className={cn(badgeVariants({ variant }), className)} {...props} />
+			<Component className={cn(badgeVariants({ variant }), className, color)} {...props} />
 		</TextClassContext.Provider>
 	);
 }

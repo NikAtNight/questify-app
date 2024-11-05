@@ -25,7 +25,6 @@ import { Progress } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { H2 } from "@/components/ui/typography";
 import { UserHabitUpdate, STATUS_LEVELS_MAP, DIFFICULTY_LEVELS_MAP } from "@/lib/models/habits";
-import { getDifficultyColor, getStatusColor } from "@/lib/utils";
 
 const Details = () => {
 	const router = useRouter();
@@ -105,7 +104,7 @@ const Details = () => {
 							<CardHeader className="pb-2">
 								<View className="flex flex-row items-center justify-between">
 									<CardTitle>Progress</CardTitle>
-									<Badge variant="secondary" className={`mb-2 ${getStatusColor(userHabit.status)}`}>
+									<Badge variant="secondary" status={userHabit.status} className="mb-2">
 										<Text>{STATUS_LEVELS_MAP[userHabit.status]}</Text>
 									</Badge>
 								</View>
@@ -116,7 +115,7 @@ const Details = () => {
 									<Text className="text-right text-sm text-muted-foreground">
 										{userHabit.progressPercentage}% Complete
 									</Text>
-									<Badge variant="secondary" className={`${getDifficultyColor(userHabit.habit.difficultyLevel)}`}>
+									<Badge variant="secondary" status={userHabit.habit.difficultyLevel}>
 										<Text>{DIFFICULTY_LEVELS_MAP[userHabit.habit.difficultyLevel]}</Text>
 									</Badge>
 								</View>
