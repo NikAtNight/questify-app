@@ -11,14 +11,14 @@ export const getColor = (value: string) => {
 	switch (value) {
 		case "EASY":
 		case "COMPLETED":
-			return "bg-green-500";
+			return "bg-green-700";
 		case "MEDIUM":
-			return "bg-yellow-500";
+			return "bg-yellow-600";
 		case "HARD":
 		case "ABANDONED":
-			return "bg-red-500";
+			return "bg-red-600";
 		case "IN_PROGRESS":
-			return "bg-blue-500";
+			return "bg-blue-600";
 		default:
 			return "bg-gray-500";
 	}
