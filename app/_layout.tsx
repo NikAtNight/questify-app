@@ -1,9 +1,11 @@
 import "../global.css";
 import "axiosConfig";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import { PostHogProvider } from "posthog-react-native";
 import { LogBox } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -28,21 +30,25 @@ export default function RootLayout() {
 			<QueryClientProvider client={queryClient}>
 				<SupabaseProvider>
 					<SafeAreaProvider>
-						<Stack
-							screenOptions={{
-								headerShown: false,
-							}}
-						>
-							<Stack.Screen name="(protected)" />
-							<Stack.Screen name="(public)" />
-							<Stack.Screen
-								name="modal"
-								options={{
-									presentation: "modal",
-								}}
-							/>
-						</Stack>
-						<PortalHost />
+						<GestureHandlerRootView className="flex flex-1 bg-background">
+							<BottomSheetModalProvider>
+								<Stack
+									screenOptions={{
+										headerShown: false,
+									}}
+								>
+									<Stack.Screen name="(protected)" />
+									<Stack.Screen name="(public)" />
+									<Stack.Screen
+										name="modal"
+										options={{
+											presentation: "modal",
+										}}
+									/>
+								</Stack>
+								<PortalHost />
+							</BottomSheetModalProvider>
+						</GestureHandlerRootView>
 					</SafeAreaProvider>
 				</SupabaseProvider>
 			</QueryClientProvider>

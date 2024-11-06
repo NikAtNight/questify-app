@@ -113,7 +113,7 @@ const Details = () => {
 								<Progress value={userHabit.progressPercentage} className="h-2 mb-1" />
 								<View className="flex flex-row justify-between items-center">
 									<Text className="text-right text-sm text-muted-foreground">
-										{userHabit.progressPercentage}% Complete
+										{userHabit.progressPercentage.toFixed(2)}% Complete
 									</Text>
 									<Badge variant="secondary" status={userHabit.habit.difficultyLevel}>
 										<Text>{DIFFICULTY_LEVELS_MAP[userHabit.habit.difficultyLevel]}</Text>

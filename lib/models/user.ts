@@ -6,3 +6,13 @@ export const UserSignupSchema = z.object({
 });
 
 export type UserSignup = z.infer<typeof UserSignupSchema>;
+
+export const createUserSchema = () =>
+	z.object({
+		id: z.string(),
+		email: z.string().email(),
+		firstName: z.string(),
+		lastName: z.string(),
+	});
+
+export type User = z.infer<ReturnType<typeof createUserSchema>>;

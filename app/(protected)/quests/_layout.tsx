@@ -9,7 +9,6 @@ export default function ProtectedLayout() {
 			}}
 		>
 			<Stack.Screen name="habits" />
-			<Stack.Screen name="skills" />
 		</Stack>
 	);
 }

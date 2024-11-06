@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Search } from "lucide-react-native";
 import { useForm } from "react-hook-form";
 import { View } from "react-native";
 import * as z from "zod";
@@ -7,9 +6,7 @@ import * as z from "zod";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormInput, FormSelect } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { H3 } from "@/components/ui/typography";
 
 const formSchema = z.object({
 	label: z.string().min(1, "Please enter at least 1 character."),

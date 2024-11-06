@@ -112,7 +112,7 @@ export default function Home() {
 								<View className="pb-4">
 									<Progress value={item.progressPercentage} className="h-2" />
 									<View className="flex flex-row justify-between pt-4">
-										<Muted>Progress: {item.progressPercentage}%</Muted>
+										<Muted>Progress: {item.progressPercentage.toFixed(2)}%</Muted>
 										<Badge variant="secondary" status={item.habit.difficultyLevel}>
 											<Text>{DIFFICULTY_LEVELS_MAP[item.habit.difficultyLevel]}</Text>
 										</Badge>

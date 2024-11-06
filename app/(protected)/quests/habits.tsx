@@ -1,10 +1,15 @@
-import { useRouter } from "expo-router";
-import { Search, Plus, Star, ChevronRight } from "lucide-react-native";
+// import { useRouter } from "expo-router";
+import {
+	Search,
+	// Plus,
+	Star,
+} from "lucide-react-native";
 import { useCallback, useState } from "react";
-import { View, ScrollView, RefreshControl, TouchableOpacity } from "react-native";
+import { View, ScrollView, RefreshControl } from "react-native";
 
-import { useGetHabits } from "@/actions/habitHooks";
+import { useGetHabits, useCreateUserHabit } from "@/actions/habitHooks";
 import LoadingScreen from "@/components/loading-screen";
+import MilestoneSheet from "@/components/milestone-sheet";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +20,13 @@ import { H2, H4, Muted } from "@/components/ui/typography";
 import { DIFFICULTY_LEVELS_MAP, type Habit } from "@/lib/models/habits";
 
 export default function AvailableQuests() {
-	const router = useRouter();
+	// const router = useRouter();
 	const [refreshing, setRefreshing] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [loadMilestoneSheet, setLoadMilestoneSheet] = useState<null | string>(null);
 
 	const { data: habits, isLoading, refetch } = useGetHabits();
+	const { mutate: createUserHabit } = useCreateUserHabit();
 
 	const handleRefetch = async () => {
 		setRefreshing(true);
@@ -31,19 +38,30 @@ export default function AvailableQuests() {
 		handleRefetch();
 	}, []);
 
+	const handleCreateUserHabit = (habitId: string) => {
+		createUserHabit(
+			{ habit: habitId },
+			{
+				onSuccess: () => {
+					handleRefetch();
+				},
+			},
+		);
+	};
+
 	const filteredHabits = habits?.filter((habit: Habit) => habit.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
 	return (
 		<SafeAreaView className="flex-1 bg-background p-4">
 			<View className="flex-row items-center justify-between mb-4">
 				<H2>Available Quests</H2>
-				<Button
-					// onPress={() => router.push("/create-quest")}
+				{/* <Button
+					onPress={() => router.push("/create-quest")}
 					variant="ghost"
 					size="icon"
 				>
 					<Plus />
-				</Button>
+				</Button> */}
 			</View>
 
 			<View className="mb-4">
@@ -82,15 +100,11 @@ export default function AvailableQuests() {
 									variant="outline"
 									className="flex-1 mr-2"
 									size="sm"
-								// onPress={() => router.push(`/quest-details/${habit.id}`)}
+									onPress={() => setLoadMilestoneSheet(habit.id)}
 								>
 									<Text>View Details</Text>
 								</Button>
-								<Button
-									className="flex-1 ml-2"
-									size="sm"
-								// onPress={() => router.push(`/track-quest/${habit.id}`)}
-								>
+								<Button className="flex-1 ml-2" size="sm" onPress={() => handleCreateUserHabit(habit.id)}>
 									<Text>Track Quest</Text>
 								</Button>
 							</CardFooter>
@@ -98,6 +112,7 @@ export default function AvailableQuests() {
 					))
 				)}
 			</ScrollView>
+			<MilestoneSheet habitId={loadMilestoneSheet} onClose={() => setLoadMilestoneSheet(null)} />
 		</SafeAreaView>
 	);
 }

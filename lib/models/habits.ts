@@ -53,6 +53,12 @@ export const UserHabitSchema = z.object({
 
 export type UserHabit = z.infer<typeof UserHabitSchema>;
 
+export const UserHabitCreateSchema = z.object({
+	habit: z.string().uuid(),
+});
+
+export type UserHabitCreate = z.infer<typeof UserHabitCreateSchema>;
+
 export const UserHabitRetrieveSchema = z.object({
 	id: z.string().uuid(),
 	habit: z.object({

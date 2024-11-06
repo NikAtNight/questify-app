@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
-import { UserHabit, UserHabitRetrieve, UserHabitUpdate } from "@/lib/models/habits";
+import { UserHabit, UserHabitRetrieve, UserHabitUpdate, UserHabitCreate } from "@/lib/models/habits";
 
 const getHabits = async () => {
 	const response = await axios.get("/habits/");
@@ -10,6 +10,20 @@ const getHabits = async () => {
 
 const useGetHabits = () => {
 	return useQuery("habits", getHabits);
+};
+
+const createUserHabit = async (data: UserHabitCreate) => {
+	const response = await axios.post("/user-habits/", data);
+	return response.data;
+};
+
+const useCreateUserHabit = () => {
+	const queryClient = useQueryClient();
+	return useMutation(createUserHabit, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("userHabits");
+		},
+	});
 };
 
 const getUserHabits = async () => {
@@ -61,4 +75,4 @@ const useTrackUserHabit = () => {
 	return useMutation(trackUserHabit);
 };
 
-export { useGetHabits, useGetUserHabits, useGetUserHabit, useUpdateUserHabit, useTrackUserHabit };
+export { useGetHabits, useGetUserHabits, useGetUserHabit, useUpdateUserHabit, useTrackUserHabit, useCreateUserHabit };
