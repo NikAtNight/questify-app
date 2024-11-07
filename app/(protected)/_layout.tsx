@@ -6,9 +6,9 @@ import { theme } from "@/lib/constants";
 import { useColorScheme } from "@/lib/useColorScheme";
 
 export default function ProtectedLayout() {
-	const { colorScheme } = useColorScheme();
+	const { isDarkColorScheme } = useColorScheme();
 
-	const colors = colorScheme === "dark" ? theme.dark : theme.light;
+	const colors = isDarkColorScheme ? theme.dark : theme.light;
 
 	return (
 		<Tabs

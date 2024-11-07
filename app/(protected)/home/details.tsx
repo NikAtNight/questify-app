@@ -20,6 +20,7 @@ import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CalendarUI from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
@@ -182,19 +183,7 @@ const Details = () => {
 								<CardTitle>Recent Activity</CardTitle>
 							</CardHeader>
 							<CardContent>
-								{userHabit.habitLogs && userHabit.habitLogs.length > 0 ? (
-									userHabit.habitLogs.map((item, i) => (
-										<View key={i} className="flex flex-row justify-between items-center py-2">
-											<Text>{moment(item.createdAt).format("MMM DD, YYYY")}</Text>
-											<View className="flex flex-row items-center gap-x-2">
-												<CheckCircle2 className="text-green-500" size={20} />
-												<Text className="text-sm text-muted-foreground">Completed</Text>
-											</View>
-										</View>
-									))
-								) : (
-									<Text className="text-center text-muted-foreground">No habit logs available</Text>
-								)}
+								<CalendarUI logs={userHabit.habitLogs} />
 							</CardContent>
 						</Card>
 					</ScrollView>

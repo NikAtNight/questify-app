@@ -13,8 +13,8 @@ interface SheetProps {
 
 const Sheet = ({ isOpen, onClose, children, snapPoints = ["25%"] }: SheetProps) => {
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
-	const { colorScheme } = useColorScheme();
-	const colors = colorScheme === "dark" ? theme.dark : theme.light;
+	const { isDarkColorScheme } = useColorScheme();
+	const colors = isDarkColorScheme ? theme.dark : theme.light;
 
 	useEffect(() => {
 		if (isOpen) {

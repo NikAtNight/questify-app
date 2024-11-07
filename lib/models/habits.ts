@@ -94,3 +94,9 @@ export const UserHabitUpdateSchema = z.object({
 });
 
 export type UserHabitUpdate = z.infer<typeof UserHabitUpdateSchema>;
+
+export const HabitLogSchema = z.object({
+	createdAt: z.string().datetime(),
+});
+
+export type HabitLog = z.infer<typeof HabitLogSchema>;
