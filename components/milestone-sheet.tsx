@@ -25,7 +25,7 @@ const MilestoneContent = ({ habitId }: { habitId: string }) => {
 						<WandSparkles className="text-purple-500" size={20} />
 						<Text>{milestone.name}</Text>
 					</View>
-					<Text className="font-semibold">{milestone.day}</Text>
+					<Text className="font-semibold">{milestone.day} days</Text>
 				</View>
 			))}
 		</View>

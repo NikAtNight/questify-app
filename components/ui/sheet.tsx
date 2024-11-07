@@ -9,9 +9,10 @@ interface SheetProps {
 	onClose: () => void;
 	children: React.ReactNode;
 	snapPoints?: string[];
+	maxContentSize?: number;
 }
 
-const Sheet = ({ isOpen, onClose, children, snapPoints = ["25%"] }: SheetProps) => {
+const Sheet = ({ isOpen, onClose, children, snapPoints = ["25%"], maxContentSize = 400 }: SheetProps) => {
 	const bottomSheetRef = useRef<BottomSheetModal>(null);
 	const { isDarkColorScheme } = useColorScheme();
 	const colors = isDarkColorScheme ? theme.dark : theme.light;
@@ -41,7 +42,7 @@ const Sheet = ({ isOpen, onClose, children, snapPoints = ["25%"] }: SheetProps) 
 			handleIndicatorStyle={{ backgroundColor: colors.border }}
 			snapPoints={snapPoints}
 			onDismiss={handleDismiss}
-			maxDynamicContentSize={400}
+			maxDynamicContentSize={maxContentSize}
 			overDragResistanceFactor={0}
 			enablePanDownToClose
 			backdropComponent={renderBackdrop}
