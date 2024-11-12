@@ -5,7 +5,6 @@ import {
 	WandSparkles,
 	Sword,
 	Target,
-	CheckCircle2,
 	RotateCcw,
 	Flame,
 	Goal,
@@ -13,9 +12,10 @@ import {
 	ShieldOff,
 } from "lucide-react-native";
 import moment from "moment";
+import { useState, useCallback } from "react";
 import { ScrollView, View, Alert } from "react-native";
 
-import { useGetUserHabit, useTrackUserHabit, useUpdateUserHabit } from "@/actions/habitHooks";
+import { useGetUserHabit, useTrackUserHabit, useUpdateUserHabit, useGetHabitLogs } from "@/actions/habitHooks";
 import LoadingScreen from "@/components/loading-screen";
 import { SafeAreaView } from "@/components/safe-area-view";
 import { Badge } from "@/components/ui/badge";
@@ -30,9 +30,23 @@ import { UserHabitUpdate, STATUS_LEVELS_MAP, DIFFICULTY_LEVELS_MAP } from "@/lib
 const Details = () => {
 	const router = useRouter();
 	const params = useLocalSearchParams();
+	const [currentDate, setCurrentDate] = useState(() => ({
+		month: moment().format("M"),
+		year: moment().format("YYYY"),
+	}));
+
 	const { data: userHabit, isLoading, refetch } = useGetUserHabit(params.habitId as string);
 	const { mutate: updateUserHabit } = useUpdateUserHabit();
 	const { mutate: trackUserHabit } = useTrackUserHabit();
+	const {
+		data: habitLogs,
+		isLoading: isLoadingHabitLogs,
+		refetch: refetchHabitLogs,
+	} = useGetHabitLogs({
+		month: currentDate.month,
+		year: currentDate.year,
+		habitId: userHabit?.habit.id,
+	});
 
 	const handleTrackProgress = (habitId: string) => {
 		trackUserHabit(
@@ -58,6 +72,30 @@ const Details = () => {
 			},
 		);
 	};
+
+	const handleArrowPressRight = useCallback(
+		(date: Date) => {
+			const newDate = {
+				month: moment(date).format("M"),
+				year: moment(date).format("YYYY"),
+			};
+			setCurrentDate(newDate);
+			refetchHabitLogs();
+		},
+		[refetchHabitLogs],
+	);
+
+	const handleArrowPressLeft = useCallback(
+		(date: Date) => {
+			const newDate = {
+				month: moment(date).format("M"),
+				year: moment(date).format("YYYY"),
+			};
+			setCurrentDate(newDate);
+			refetchHabitLogs();
+		},
+		[refetchHabitLogs],
+	);
 
 	return (
 		<SafeAreaView className="flex flex-1 bg-background">
@@ -183,7 +221,12 @@ const Details = () => {
 								<CardTitle>Recent Activity</CardTitle>
 							</CardHeader>
 							<CardContent>
-								<CalendarUI logs={userHabit.habitLogs} />
+								<CalendarUI
+									logs={habitLogs}
+									handleArrowPressRight={handleArrowPressRight}
+									handleArrowPressLeft={handleArrowPressLeft}
+									isLoading={isLoadingHabitLogs}
+								/>
 							</CardContent>
 						</Card>
 					</ScrollView>

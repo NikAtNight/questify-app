@@ -72,7 +72,35 @@ const trackUserHabit = async (data: { habit: string }) => {
 };
 
 const useTrackUserHabit = () => {
-	return useMutation(trackUserHabit);
+	const queryClient = useQueryClient();
+	return useMutation(trackUserHabit, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("habitLogs");
+		},
+	});
 };
 
-export { useGetHabits, useGetUserHabits, useGetUserHabit, useUpdateUserHabit, useTrackUserHabit, useCreateUserHabit };
+const getHabitLogs = async (params: { month: string; year: string; habitId?: string }) => {
+	if (!params.habitId) return null;
+	const response = await axios.get(`/habit-logs/`, {
+		params: { month: params.month, year: params.year, habitId: params.habitId },
+	});
+	return response.data;
+};
+
+const useGetHabitLogs = (params: { month: string; year: string; habitId?: string }) => {
+	return useQuery(["habitLogs", params], () => getHabitLogs(params), {
+		keepPreviousData: true,
+		enabled: !!params.habitId,
+	});
+};
+
+export {
+	useGetHabits,
+	useGetUserHabits,
+	useGetUserHabit,
+	useUpdateUserHabit,
+	useTrackUserHabit,
+	useCreateUserHabit,
+	useGetHabitLogs,
+};

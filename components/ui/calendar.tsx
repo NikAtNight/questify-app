@@ -6,11 +6,17 @@ import { theme } from "@/lib/constants";
 import { HabitLog } from "@/lib/models/habits";
 import { useColorScheme } from "@/lib/useColorScheme";
 
-const CURRENT_DATE = new Date().toISOString().split("T")[0];
+type CalendarUIProps = {
+	logs: HabitLog[];
+	handleArrowPressRight: (date: Date) => void;
+	handleArrowPressLeft: (date: Date) => void;
+	isLoading: boolean;
+};
 
-const CalendarUI = ({ logs }: { logs: HabitLog[] }) => {
+const CalendarUI = ({ logs, handleArrowPressRight, handleArrowPressLeft, isLoading }: CalendarUIProps) => {
 	const { isDarkColorScheme } = useColorScheme();
 	const [selectedValue, setSelectedValue] = useState(new Date());
+	const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().split("T")[0]);
 
 	const colors = isDarkColorScheme ? theme.dark : theme.light;
 
@@ -29,6 +35,8 @@ const CalendarUI = ({ logs }: { logs: HabitLog[] }) => {
 		(subtract: () => void, month: string): void => {
 			const newDate = getNewSelectedDate(month, false);
 			setSelectedValue(newDate);
+			setCurrentMonth(newDate.toISOString().split("T")[0]);
+			handleArrowPressLeft(newDate);
 			subtract();
 		},
 		[getNewSelectedDate],
@@ -38,6 +46,8 @@ const CalendarUI = ({ logs }: { logs: HabitLog[] }) => {
 		(add: () => void, month: string): void => {
 			const newDate = getNewSelectedDate(month, true);
 			setSelectedValue(newDate);
+			setCurrentMonth(newDate.toISOString().split("T")[0]);
+			handleArrowPressRight(newDate);
 			add();
 		},
 		[getNewSelectedDate],
@@ -47,18 +57,21 @@ const CalendarUI = ({ logs }: { logs: HabitLog[] }) => {
 		<View>
 			<Calendar
 				hideExtraDays
-				current={CURRENT_DATE}
-				maxDate={CURRENT_DATE}
+				current={currentMonth}
+				maxDate={new Date().toISOString().split("T")[0]}
 				disableAllTouchEventsForDisabledDays
-				markedDates={logs.reduce(
-					(acc, log) => ({
-						...acc,
-						[log.createdAt.split("T")[0]]: { selected: true },
-					}),
-					{},
-				)}
+				markedDates={
+					logs?.reduce(
+						(acc, log) => ({
+							...acc,
+							[log?.createdAt?.split("T")[0] || ""]: { selected: true },
+						}),
+						{},
+					) || {}
+				}
 				onPressArrowLeft={onPressArrowLeft}
 				onPressArrowRight={onPressArrowRight}
+				displayLoadingIndicator={isLoading}
 				theme={{
 					calendarBackground: "transparent",
 					arrowColor: colors.foreground,
