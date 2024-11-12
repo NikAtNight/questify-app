@@ -92,6 +92,8 @@ const useGetHabitLogs = (params: { month: string; year: string; habitId?: string
 	return useQuery(["habitLogs", params], () => getHabitLogs(params), {
 		keepPreviousData: true,
 		enabled: !!params.habitId,
+		cacheTime: 1000 * 60 * 60,
+		staleTime: 1000 * 60 * 60,
 	});
 };
 

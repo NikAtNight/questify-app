@@ -36,8 +36,8 @@ const CalendarUI = ({ logs, handleArrowPressRight, handleArrowPressLeft, isLoadi
 			const newDate = getNewSelectedDate(month, false);
 			setSelectedValue(newDate);
 			setCurrentMonth(newDate.toISOString().split("T")[0]);
-			handleArrowPressLeft(newDate);
 			subtract();
+			handleArrowPressLeft(newDate);
 		},
 		[getNewSelectedDate],
 	);
@@ -47,8 +47,8 @@ const CalendarUI = ({ logs, handleArrowPressRight, handleArrowPressLeft, isLoadi
 			const newDate = getNewSelectedDate(month, true);
 			setSelectedValue(newDate);
 			setCurrentMonth(newDate.toISOString().split("T")[0]);
-			handleArrowPressRight(newDate);
 			add();
+			handleArrowPressRight(newDate);
 		},
 		[getNewSelectedDate],
 	);

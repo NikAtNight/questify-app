@@ -38,11 +38,7 @@ const Details = () => {
 	const { data: userHabit, isLoading, refetch } = useGetUserHabit(params.habitId as string);
 	const { mutate: updateUserHabit } = useUpdateUserHabit();
 	const { mutate: trackUserHabit } = useTrackUserHabit();
-	const {
-		data: habitLogs,
-		isLoading: isLoadingHabitLogs,
-		refetch: refetchHabitLogs,
-	} = useGetHabitLogs({
+	const { data: habitLogs, isLoading: isLoadingHabitLogs } = useGetHabitLogs({
 		month: currentDate.month,
 		year: currentDate.year,
 		habitId: userHabit?.habit.id,
@@ -73,29 +69,13 @@ const Details = () => {
 		);
 	};
 
-	const handleArrowPressRight = useCallback(
-		(date: Date) => {
-			const newDate = {
-				month: moment(date).format("M"),
-				year: moment(date).format("YYYY"),
-			};
-			setCurrentDate(newDate);
-			refetchHabitLogs();
-		},
-		[refetchHabitLogs],
-	);
-
-	const handleArrowPressLeft = useCallback(
-		(date: Date) => {
-			const newDate = {
-				month: moment(date).format("M"),
-				year: moment(date).format("YYYY"),
-			};
-			setCurrentDate(newDate);
-			refetchHabitLogs();
-		},
-		[refetchHabitLogs],
-	);
+	const handleArrowPress = useCallback((date: Date) => {
+		const newDate = {
+			month: moment(date).format("M"),
+			year: moment(date).format("YYYY"),
+		};
+		setCurrentDate(newDate);
+	}, []);
 
 	return (
 		<SafeAreaView className="flex flex-1 bg-background">
@@ -223,8 +203,8 @@ const Details = () => {
 							<CardContent>
 								<CalendarUI
 									logs={habitLogs}
-									handleArrowPressRight={handleArrowPressRight}
-									handleArrowPressLeft={handleArrowPressLeft}
+									handleArrowPressRight={handleArrowPress}
+									handleArrowPressLeft={handleArrowPress}
 									isLoading={isLoadingHabitLogs}
 								/>
 							</CardContent>
